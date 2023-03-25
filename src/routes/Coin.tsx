@@ -87,6 +87,10 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
+interface ICoinProps {
+ 
+}
+
 interface RouteParams {
   coinId: string;
 }
@@ -150,7 +154,7 @@ export interface PriceData {
   };
 }
 
-function Coin() {
+function Coin({  }: ICoinProps) {
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
   const priceMatch = useRouteMatch("/:coinId/price");
@@ -159,7 +163,7 @@ function Coin() {
     ["info", coinId],
     () => fetchCoinInfo(coinId)
   );
- 
+
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
     () => fetchCoinTickers(coinId),
@@ -168,7 +172,7 @@ function Coin() {
     }
   );
   const loading = infoLoading || tickersLoading;
-  
+
   return (
     <Container>
       <Helmet>
@@ -224,7 +228,7 @@ function Coin() {
 
           <Switch>
             <Route path={`/:coinId/price`}>
-              <Price coinId={coinId}/>
+              <Price coinId={coinId} />
             </Route>
             <Route path={`/:coinId/chart`}>
               <Chart coinId={coinId} />

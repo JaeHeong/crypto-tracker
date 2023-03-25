@@ -1,5 +1,10 @@
-import { createGlobalStyle } from "styled-components";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import { isDarkAtom } from "./atoms";
 import Router from "./Router";
+import { darkTheme, lightsTheme } from "./theme";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLightbulb } from '@fortawesome/free-solid-svg-icons'
 // import { ReactQueryDevtools } from "react-query/devtools";
 
 const GlobalStyle = createGlobalStyle`
@@ -67,12 +72,34 @@ a {
 }
 `;
 
+const ToggleButton = styled.button`
+  position: fixed;
+  bottom: 25px;
+  width: 50px;
+  height: 50px;
+  left: 25px;
+  border-radius: 50px;
+  opacity: 50%;
+  &:hover {
+    color: ${(props) => props.theme.accentColor};
+    cursor: pointer;
+  };
+`
+
 function App() {
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom(prev => !prev);
+  const isDark = useRecoilValue(isDarkAtom)
   return (
     <>
-      <GlobalStyle />
+      <ThemeProvider theme={isDark ? darkTheme : lightsTheme}>
+        <GlobalStyle />
         <Router />
-      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+        <ToggleButton onClick={toggleDarkAtom}>
+          <FontAwesomeIcon icon={faLightbulb} size="2x" />
+        </ToggleButton>
+      </ThemeProvider>
     </>
   );
 }
